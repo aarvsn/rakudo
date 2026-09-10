@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rakudo — The PlayStation Hardware & Emulation Reference — Rakudo</title>
+<meta name="description" content="Rakudo is a complete technical reference for every PlayStation console: hardware architecture, model revisions, and emulation guidance, split into one page per console generation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="shell">
+
+  <aside class="toc" aria-label="Table of contents">
+    <div class="toc-brand"><span class="mark">RAKUDO</span><span class="kanji">楽土</span></div>
+    <p class="toc-sub">The PlayStation hardware &amp; emulation reference</p>
+    <nav>
+      <div class="toc-group-label">FRONT MATTER</div>
+      <ul>
+        <li><a href="index.html" data-file="index.html"><span class="chip"></span>Cover &amp; introduction</a></li>
+      </ul>
+      <div class="toc-group-label">HARDWARE GENERATIONS</div>
+      <ul>
+        <li><a href="docs/ps1.html" data-file="ps1.html" style="--dot:var(--c-ps1)"><span class="chip"></span>01 · PlayStation (PS1)</a></li>
+        <li><a href="docs/ps2.html" data-file="ps2.html" style="--dot:var(--c-ps2)"><span class="chip"></span>02 · PlayStation 2</a></li>
+        <li><a href="docs/psp.html" data-file="psp.html" style="--dot:var(--c-psp)"><span class="chip"></span>03 · PSP</a></li>
+        <li><a href="docs/ps3.html" data-file="ps3.html" style="--dot:var(--c-ps3)"><span class="chip"></span>04 · PlayStation 3</a></li>
+        <li><a href="docs/vita.html" data-file="vita.html" style="--dot:var(--c-vita)"><span class="chip"></span>05 · PS Vita</a></li>
+        <li><a href="docs/ps4.html" data-file="ps4.html" style="--dot:var(--c-ps4)"><span class="chip"></span>06 · PlayStation 4</a></li>
+        <li><a href="docs/psvr.html" data-file="psvr.html" style="--dot:var(--c-vr)"><span class="chip"></span>07 · PS VR / VR2</a></li>
+        <li><a href="docs/ps5.html" data-file="ps5.html" style="--dot:var(--c-ps5)"><span class="chip"></span>08 · PlayStation 5</a></li>
+      </ul>
+      <div class="toc-group-label">REFERENCE</div>
+      <ul>
+        <li><a href="docs/compat-matrix.html" data-file="compat-matrix.html"><span class="chip"></span>Emulator compatibility matrix</a></li>
+        <li><a href="docs/bios.html" data-file="bios.html"><span class="chip"></span>BIOS & firmware dumping</a></li>
+        <li><a href="docs/legal.html" data-file="legal.html"><span class="chip"></span>Legal notes</a></li>
+        <li><a href="docs/glossary.html" data-file="glossary.html"><span class="chip"></span>Glossary</a></li>
+      </ul>
+    </nav>
+    <div class="toc-foot">
+      <p>aarvsn/rakudo<br>Community-maintained · MIT licensed</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="wrap">
+
+      <section class="cover" id="intro">
+        <div class="eyebrow-code">
+          <span>REV 1.0.0</span><span>SEP 2026</span><span>SCE / SIE, 1994–2026</span>
+        </div>
+        <h1>Rakudo<br><span>楽土</span></h1>
+        <p class="tagline">A single-file, offline-readable reference for the hardware inside every PlayStation console, and a practical guide to emulating each of them on modern PCs.</p>
+        <p class="lede">Rakudo (楽土 — "land of comfort") documents the architecture of the PlayStation, PS2, PSP, PS3, PS Vita, PS4, PS VR / VR2 and PS5 families: die-level components, memory subsystems, storage media, model revisions by region, and the current state of software emulation for each platform. It is written for people who already own the hardware they intend to preserve or emulate, and who want primary-source-accurate numbers instead of marketing copy.</p>
+
+        <div class="cover-grid">
+          <div class="cell"><div class="num">8</div><div class="lbl">hardware generations covered</div></div>
+          <div class="cell"><div class="num">30+</div><div class="lbl">model revisions documented</div></div>
+          <div class="cell"><div class="num">1994–2024</div><div class="lbl">launch date span</div></div>
+          <div class="cell"><div class="num">7</div><div class="lbl">emulators benchmarked</div></div>
+        </div>
+      </section>
+
+      <section id="how-to-read" style="padding:50px 0; border-bottom:1px solid var(--rule);">
+        <h3 class="section-h"><span class="idx">§</span>How to read this book</h3>
+        <p>Each console generation follows the same structure: a hardware overview, a full component-level specification table, the notable regional/model variants, and an emulation guide with the current best-in-class emulator, its accuracy status, minimum host requirements, and configuration notes. Specification figures are sourced from Sony technical documentation, official service manuals, teardown reports, and long-standing homebrew/reverse-engineering documentation (No$psx, PSDevWiki, psx-spx, Vita Nubis, RPCS3 wiki). Where a figure is disputed or was never officially confirmed (marked <span class="status mid">UNCONFIRMED</span>), it is labelled as such rather than presented as fact.</p>
+        <p>Emulator accuracy statuses used throughout: <span class="status full">FULL</span> nearly all commercial software runs correctly, <span class="status high">HIGH</span> the large majority runs correctly with minor issues, <span class="status mid">PARTIAL</span> playable but with known regressions, <span class="status early">EARLY</span> boots a limited library, experimental.</p>
+      </section>
+
+    </div>
+    <div class="wrap">
+      <div class="chapter-nav">
+        <span></span>
+        <a class="next" href="docs/ps1.html"><span class="dir">next &rarr;</span><span class="label">01 · PlayStation (PS1)</span></a>
+      </div>
+    </div>
+    <footer>
+      <div class="wrap">
+        <p>Rakudo (楽土) is an independent, community-maintained reference. Not affiliated with, endorsed by, or sponsored by Sony Interactive Entertainment. PlayStation, PS1–PS5, DualShock, DualSense and related marks are trademarks of Sony Interactive Entertainment. Emulator names are trademarks of their respective projects, credited above.</p>
+        <p>Repository: <a href="https://github.com/aarvsn/rakudo">github.com/aarvsn/rakudo</a> · Licensed under MIT.</p>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script src="assets/nav.js"></script>
+</body>
+</html>
