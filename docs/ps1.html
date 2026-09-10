@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlayStation (PS1) — hardware & emulation — Rakudo</title>
+<meta name="description" content="The CoreWare CW33300 CPU, GTE, SPU, and every notable PS1 model revision from SCPH-1000 to the PS-One, plus the DuckStation / pcsx-redux / Beetle PSX HW emulation guide.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="shell">
+
+  <aside class="toc" aria-label="Table of contents">
+    <div class="toc-brand"><span class="mark">RAKUDO</span><span class="kanji">楽土</span></div>
+    <p class="toc-sub">The PlayStation hardware &amp; emulation reference</p>
+    <nav>
+      <div class="toc-group-label">FRONT MATTER</div>
+      <ul>
+        <li><a href="../index.html" data-file="index.html"><span class="chip"></span>Cover &amp; introduction</a></li>
+      </ul>
+      <div class="toc-group-label">HARDWARE GENERATIONS</div>
+      <ul>
+        <li><a href="ps1.html" data-file="ps1.html" style="--dot:var(--c-ps1)"><span class="chip"></span>01 · PlayStation (PS1)</a></li>
+        <li><a href="ps2.html" data-file="ps2.html" style="--dot:var(--c-ps2)"><span class="chip"></span>02 · PlayStation 2</a></li>
+        <li><a href="psp.html" data-file="psp.html" style="--dot:var(--c-psp)"><span class="chip"></span>03 · PSP</a></li>
+        <li><a href="ps3.html" data-file="ps3.html" style="--dot:var(--c-ps3)"><span class="chip"></span>04 · PlayStation 3</a></li>
+        <li><a href="vita.html" data-file="vita.html" style="--dot:var(--c-vita)"><span class="chip"></span>05 · PS Vita</a></li>
+        <li><a href="ps4.html" data-file="ps4.html" style="--dot:var(--c-ps4)"><span class="chip"></span>06 · PlayStation 4</a></li>
+        <li><a href="psvr.html" data-file="psvr.html" style="--dot:var(--c-vr)"><span class="chip"></span>07 · PS VR / VR2</a></li>
+        <li><a href="ps5.html" data-file="ps5.html" style="--dot:var(--c-ps5)"><span class="chip"></span>08 · PlayStation 5</a></li>
+      </ul>
+      <div class="toc-group-label">REFERENCE</div>
+      <ul>
+        <li><a href="compat-matrix.html" data-file="compat-matrix.html"><span class="chip"></span>Emulator compatibility matrix</a></li>
+        <li><a href="bios.html" data-file="bios.html"><span class="chip"></span>BIOS & firmware dumping</a></li>
+        <li><a href="legal.html" data-file="legal.html"><span class="chip"></span>Legal notes</a></li>
+        <li><a href="glossary.html" data-file="glossary.html"><span class="chip"></span>Glossary</a></li>
+      </ul>
+    </nav>
+    <div class="toc-foot">
+      <p>aarvsn/rakudo<br>Community-maintained · MIT licensed</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="wrap">
+
+      <section class="console" id="ps1">
+        <div class="gen-head">
+          <div>
+            <div class="codename">Generation 1 · Codename "PS-X" / Net Yaroze for developers</div>
+            <h2>PlayStation</h2>
+          </div>
+          <div class="gen-model">SCPH-1000 → SCPH-9000</div>
+        </div>
+        <div class="colorbar"></div>
+        <p class="lede">Released in Japan on 3 December 1994, the PlayStation was Sony Computer Entertainment's first console and the first CD-ROM-based platform to sell past 100 million units. It replaced sprite-based 2D hardware with a dedicated 3D geometry engine, the first mainstream console to do so, and it shipped a CD-ROM drive as standard at a time most competitors still used cartridges.</p>
+
+        <h3 class="section-h"><span class="idx">§1.1</span>Core architecture</h3>
+        <table class="spec-table">
+          <tr><th>CPU</th><td>LSI CoreWare CW33300 — a custom MIPS R3000A-compatible 32-bit RISC core, 33.8688 MHz, with an integrated GTE (Geometry Transformation Engine) and MDEC (Motion Decoder) coprocessor on-die.</td></tr>
+          <tr><th>GTE (geometry)</th><td>Fixed-function coprocessor 2 (COP2), performs perspective transform, lighting and matrix math; rated ~66 MIPS, capable of roughly 360,000 flat-shaded polygons/sec in ideal conditions (real-world output typically 90k–180k due to CPU issue bandwidth).</td></tr>
+          <tr><th>GPU</th><td>Custom Sony 2D/3D rasterizer, no dedicated frame buffer chip separate from VRAM; renders flat and Gouraud-shaded, textured or untextured polygons and quads. No native Z-buffer — developers use manual polygon sorting (painter's algorithm) via the Ordering Table.</td></tr>
+          <tr><th>Video RAM</th><td>1 MB dedicated VRAM (framebuffer + texture cache + CLUTs share this pool).</td></tr>
+          <tr><th>Main RAM</th><td>2 MB EDO DRAM, 32-bit bus.</td></tr>
+          <tr><th>Sound RAM</th><td>512 KB, feeds the SPU.</td></tr>
+          <tr><th>SPU (audio)</th><td>Sony custom ADPCM sound processor, 24 hardware voices, 44.1 kHz output, reverb and pitch-modulation built in.</td></tr>
+          <tr><th>MDEC</th><td>Hardware motion-JPEG-style decompressor used for FMV playback (Bink/Smacke-style pre-rendered video was not used; PS1 FMV is MDEC-decoded).</td></tr>
+          <tr><th>Optical drive</th><td>Single-speed (2x from SCPH-5500 onward) CD-ROM, reads standard Yellow Book CD-ROM plus the proprietary "wobble groove" region/anti-piracy encoding on the disc's lead-in.</td></tr>
+          <tr><th>Output</th><td>Composite video, RF (early NTSC-J units), S-Video, and RGB SCART (PAL/JP); no digital output. Native resolution 256×224 up to 640×480 interlaced, typically 320×240.</td></tr>
+          <tr><th>Controller port</th><td>Proprietary 7-pin serial bus, 2 controller ports + 2 memory card slots; supports Dual Analog / DualShock controllers via the same protocol from 1997 onward.</td></tr>
+          <tr><th>Memory Card</th><td>128 KB flash card, 15 usable blocks of 8 KB each (FAT-like block allocation table).</td></tr>
+          <tr><th>Process node</th><td>0.35 µm at launch, die-shrunk to 0.25 µm and eventually integrated into the single-chip "PS-One" SoC (CXD8945Q) by 2000.</td></tr>
+        </table>
+
+        <h3 class="section-h"><span class="idx">§1.2</span>Notable model variants</h3>
+        <div class="variants">
+          <div class="variant"><div class="vmodel">SCPH-1000 / 1001 (JP/US, 1994–95)</div><h4>Launch unit</h4><p>Parallel I/O port on rear for peripherals (Net Yaroze link cable, GameShark). Digital output header present but unused by retail units.</p></div>
+          <div class="variant"><div class="vmodel">SCPH-5500 / 5501 / 5502 (1997)</div><h4>DualShock-era revision</h4><p>Removed the S-Video port on some regions, bundled with the original DualShock controller (SCPH-1200).</p></div>
+          <div class="variant"><div class="vmodel">SCPH-7000 series (1998–2000)</div><h4>Cost-reduced board</h4><p>Parallel port removed; smaller motherboard, single main ASIC integrating more logic.</p></div>
+          <div class="variant"><div class="vmodel">SCPH-100 "PS-One" (2000)</div><h4>Redesigned SoC</h4><p>~45% smaller footprint, optional LCD screen accessory (SCPH-130), single-chip CXD8945Q, external power brick.</p></div>
+        </div>
+
+        <h3 class="section-h"><span class="idx">§1.3</span>Emulation guide</h3>
+        <div class="emu-panel">
+          <div class="emu-row"><div class="k">RECOMMENDED</div><div class="v"><strong>DuckStation</strong> for gameplay accuracy and speed; <strong>pcsx-redux</strong> for development/debugging work; <strong>Beetle PSX HW</strong> (via RetroArch) for enhanced internal resolution with hardware accuracy.</div></div>
+          <div class="emu-row"><div class="k">ACCURACY</div><div class="v"><span class="status full">FULL</span> — the PS1's CPU and GPU pipeline are fully reverse-engineered and documented (psx-spx); commercial library compatibility exceeds 99%.</div></div>
+          <div class="emu-row"><div class="k">BIOS REQUIRED</div><div class="v">Yes. A legally dumped copy of your own console's BIOS ROM (512 KB, e.g. <code>SCPH1001.BIN</code>) is required for full compatibility; DuckStation ships an optional open-source HLE BIOS fallback with reduced compatibility.</div></div>
+          <div class="emu-row"><div class="k">HOST REQUIREMENT</div><div class="v">Negligible by 2026 standards — any x86_64 or ARM64 device from the last decade, including phones, runs PS1 titles at full speed with headroom for upscaling.</div></div>
+          <div class="emu-row"><div class="k">UPSCALING</div><div class="v">Internal resolution can be raised well past the native 320×240 via the hardware (Vulkan/D3D12/OpenGL) renderers; PGXP (Precision Geometry Transform Pipeline) corrects the console's signature vertex-jitter and texture warping caused by its lack of a floating-point GTE.</div></div>
+          <div class="emu-row"><div class="k">KNOWN ISSUES</div><div class="v">A minority of titles rely on exact GPU timing quirks (e.g. specific loading-screen behaviour) that can differ subtly between emulators and real hardware; CD read-speed emulation affects a handful of FMV-heavy titles.</div></div>
+        </div>
+      </section>
+
+    </div>
+    <div class="wrap">
+      <div class="chapter-nav">
+        <a href="../index.html"><span class="dir">&larr; previous</span><span class="label">Cover & introduction</span></a>
+        <a class="next" href="ps2.html"><span class="dir">next &rarr;</span><span class="label">02 · PlayStation 2</span></a>
+      </div>
+    </div>
+    <footer>
+      <div class="wrap">
+        <p>Rakudo (楽土) is an independent, community-maintained reference. Not affiliated with, endorsed by, or sponsored by Sony Interactive Entertainment. PlayStation, PS1–PS5, DualShock, DualSense and related marks are trademarks of Sony Interactive Entertainment. Emulator names are trademarks of their respective projects, credited above.</p>
+        <p>Repository: <a href="https://github.com/aarvsn/rakudo">github.com/aarvsn/rakudo</a> · Licensed under MIT.</p>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script src="../assets/nav.js"></script>
+</body>
+</html>

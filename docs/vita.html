@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PS Vita — hardware & emulation — Rakudo</title>
+<meta name="description" content="The Cortex-A9 CPU and PowerVR SGX543MP4+ GPU inside the OLED and LCD Vita models, plus the Vita3K emulation guide.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="shell">
+
+  <aside class="toc" aria-label="Table of contents">
+    <div class="toc-brand"><span class="mark">RAKUDO</span><span class="kanji">楽土</span></div>
+    <p class="toc-sub">The PlayStation hardware &amp; emulation reference</p>
+    <nav>
+      <div class="toc-group-label">FRONT MATTER</div>
+      <ul>
+        <li><a href="../index.html" data-file="index.html"><span class="chip"></span>Cover &amp; introduction</a></li>
+      </ul>
+      <div class="toc-group-label">HARDWARE GENERATIONS</div>
+      <ul>
+        <li><a href="ps1.html" data-file="ps1.html" style="--dot:var(--c-ps1)"><span class="chip"></span>01 · PlayStation (PS1)</a></li>
+        <li><a href="ps2.html" data-file="ps2.html" style="--dot:var(--c-ps2)"><span class="chip"></span>02 · PlayStation 2</a></li>
+        <li><a href="psp.html" data-file="psp.html" style="--dot:var(--c-psp)"><span class="chip"></span>03 · PSP</a></li>
+        <li><a href="ps3.html" data-file="ps3.html" style="--dot:var(--c-ps3)"><span class="chip"></span>04 · PlayStation 3</a></li>
+        <li><a href="vita.html" data-file="vita.html" style="--dot:var(--c-vita)"><span class="chip"></span>05 · PS Vita</a></li>
+        <li><a href="ps4.html" data-file="ps4.html" style="--dot:var(--c-ps4)"><span class="chip"></span>06 · PlayStation 4</a></li>
+        <li><a href="psvr.html" data-file="psvr.html" style="--dot:var(--c-vr)"><span class="chip"></span>07 · PS VR / VR2</a></li>
+        <li><a href="ps5.html" data-file="ps5.html" style="--dot:var(--c-ps5)"><span class="chip"></span>08 · PlayStation 5</a></li>
+      </ul>
+      <div class="toc-group-label">REFERENCE</div>
+      <ul>
+        <li><a href="compat-matrix.html" data-file="compat-matrix.html"><span class="chip"></span>Emulator compatibility matrix</a></li>
+        <li><a href="bios.html" data-file="bios.html"><span class="chip"></span>BIOS & firmware dumping</a></li>
+        <li><a href="legal.html" data-file="legal.html"><span class="chip"></span>Legal notes</a></li>
+        <li><a href="glossary.html" data-file="glossary.html"><span class="chip"></span>Glossary</a></li>
+      </ul>
+    </nav>
+    <div class="toc-foot">
+      <p>aarvsn/rakudo<br>Community-maintained · MIT licensed</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="wrap">
+
+      <section class="console" id="vita">
+        <div class="gen-head">
+          <div>
+            <div class="codename">Handheld line · Codename "NGP" (Next Generation Portable)</div>
+            <h2>PlayStation Vita</h2>
+          </div>
+          <div class="gen-model">PCH-1000 → PCH-2000</div>
+        </div>
+        <div class="colorbar"></div>
+        <p class="lede">Launched in Japan on 17 December 2011, the Vita packed console-class hardware — a quad-core ARM Cortex-A9 and a quad-core PowerVR GPU — into a handheld with dual analog sticks and a capacitive OLED touchscreen, but was commercially undercut by the rapid rise of smartphone gaming and Sony's own decision to restrict third-party game-card manufacturing to a proprietary format.</p>
+
+        <h3 class="section-h"><span class="idx">§5.1</span>Core architecture</h3>
+        <table class="spec-table">
+          <tr><th>CPU</th><td>ARM Cortex-A9 MPCore, 4 cores (quad-core, though one core is typically reserved by the OS for background tasks), clocked at ~444 MHz active per-game (silicon capable of higher clocks, deliberately underclocked by Sony for thermal/battery reasons).</td></tr>
+          <tr><th>GPU</th><td>PowerVR SGX543MP4+, 4 cores, ~166–222 MHz, supporting OpenGL ES 2.0-class programmable shaders — a generational leap in flexibility over the PSP's fixed-function GE.</td></tr>
+          <tr><th>Main RAM</th><td>512 MB LPDDR2.</td></tr>
+          <tr><th>VRAM</th><td>128 MB dedicated, plus the GPU can also access system RAM.</td></tr>
+          <tr><th>Display</th><td>PCH-1000: 5" OLED, 960×544. PCH-2000 "Slim": 5" LCD (cost-reduced, marginally worse black levels but better outdoor visibility and battery life).</td></tr>
+          <tr><th>Storage media</th><td>Proprietary Vita Game Card (up to 4 GB) for retail games; proprietary Sony Memory Card (not standard microSD) required for saves/digital purchases — a widely criticised design decision that raised long-term running costs.</td></tr>
+          <tr><th>Sensors</th><td>Rear touchpad (a Vita-exclusive input method), front capacitive touchscreen, three-axis accelerometer and gyroscope, GPS (Wi-Fi/3G model only), digital compass.</td></tr>
+          <tr><th>Connectivity</th><td>802.11b/g/n Wi-Fi on all models; 3G data (PCH-1100 / 1180x) on the cellular SKU, since discontinued at the carrier level.</td></tr>
+        </table>
+
+        <h3 class="section-h"><span class="idx">§5.2</span>Notable model variants</h3>
+        <div class="variants">
+          <div class="variant"><div class="vmodel">PCH-1000 (2011/2012)</div><h4>Launch OLED model</h4><p>Wi-Fi and Wi-Fi+3G SKUs; highest-quality display of any Vita revision.</p></div>
+          <div class="variant"><div class="vmodel">PCH-2000 "Slim" (2013)</div><h4>LCD redesign</h4><p>~20% lighter, ~4x internal flash storage over the original, micro-USB charging (vs. proprietary connector), no rear touchpad on the PS TV variant.</p></div>
+          <div class="variant"><div class="vmodel">PlayStation TV / VTE-1000 (2013)</div><h4>Micro-console derivative</h4><p>Vita hardware in a set-top-box form factor for TV output; no built-in screen, touchscreen, or rear touchpad, limiting compatible software.</p></div>
+        </div>
+
+        <h3 class="section-h"><span class="idx">§5.3</span>Emulation guide</h3>
+        <div class="emu-panel">
+          <div class="emu-row"><div class="k">RECOMMENDED</div><div class="v"><strong>Vita3K</strong> — the only meaningful open-source Vita emulator project, in active development since 2018.</div></div>
+          <div class="emu-row"><div class="k">ACCURACY</div><div class="v"><span class="status mid">PARTIAL</span> — a substantial and growing portion of the commercial library is playable, but compatibility is inconsistent title-to-title; this remains one of the least mature major-platform emulation projects due to the size and complexity of the Vita's system software stack.</div></div>
+          <div class="emu-row"><div class="k">FIRMWARE REQUIRED</div><div class="v">No BIOS dump, but Vita3K requires Vita system firmware files extracted from a legitimately owned and jailbroken/hacked Vita console to supply certain system modules for some titles; a growing subset of games run without any firmware files via Vita3K's HLE modules.</div></div>
+          <div class="emu-row"><div class="k">HOST REQUIREMENT</div><div class="v">Moderate — a mid-range 2020s CPU and a Vulkan-capable GPU are recommended; performance varies significantly by title given the JIT-recompiled ARM core.</div></div>
+          <div class="emu-row"><div class="k">KNOWN ISSUES</div><div class="v">Touch/rear-touchpad-dependent titles need manual control remapping; some titles crash or have broken shaders due to incomplete GXM (the Vita's low-level graphics API) reimplementation.</div></div>
+        </div>
+      </section>
+
+    </div>
+    <div class="wrap">
+      <div class="chapter-nav">
+        <a href="ps3.html"><span class="dir">&larr; previous</span><span class="label">04 · PlayStation 3</span></a>
+        <a class="next" href="ps4.html"><span class="dir">next &rarr;</span><span class="label">06 · PlayStation 4</span></a>
+      </div>
+    </div>
+    <footer>
+      <div class="wrap">
+        <p>Rakudo (楽土) is an independent, community-maintained reference. Not affiliated with, endorsed by, or sponsored by Sony Interactive Entertainment. PlayStation, PS1–PS5, DualShock, DualSense and related marks are trademarks of Sony Interactive Entertainment. Emulator names are trademarks of their respective projects, credited above.</p>
+        <p>Repository: <a href="https://github.com/aarvsn/rakudo">github.com/aarvsn/rakudo</a> · Licensed under MIT.</p>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script src="../assets/nav.js"></script>
+</body>
+</html>

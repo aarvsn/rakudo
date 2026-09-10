@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PSP — hardware & emulation — Rakudo</title>
+<meta name="description" content="The Allegrex CPU and Media Engine inside Sony's first handheld, from the PSP-1000 to the PSP Go, plus the PPSSPP emulation guide.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="shell">
+
+  <aside class="toc" aria-label="Table of contents">
+    <div class="toc-brand"><span class="mark">RAKUDO</span><span class="kanji">楽土</span></div>
+    <p class="toc-sub">The PlayStation hardware &amp; emulation reference</p>
+    <nav>
+      <div class="toc-group-label">FRONT MATTER</div>
+      <ul>
+        <li><a href="../index.html" data-file="index.html"><span class="chip"></span>Cover &amp; introduction</a></li>
+      </ul>
+      <div class="toc-group-label">HARDWARE GENERATIONS</div>
+      <ul>
+        <li><a href="ps1.html" data-file="ps1.html" style="--dot:var(--c-ps1)"><span class="chip"></span>01 · PlayStation (PS1)</a></li>
+        <li><a href="ps2.html" data-file="ps2.html" style="--dot:var(--c-ps2)"><span class="chip"></span>02 · PlayStation 2</a></li>
+        <li><a href="psp.html" data-file="psp.html" style="--dot:var(--c-psp)"><span class="chip"></span>03 · PSP</a></li>
+        <li><a href="ps3.html" data-file="ps3.html" style="--dot:var(--c-ps3)"><span class="chip"></span>04 · PlayStation 3</a></li>
+        <li><a href="vita.html" data-file="vita.html" style="--dot:var(--c-vita)"><span class="chip"></span>05 · PS Vita</a></li>
+        <li><a href="ps4.html" data-file="ps4.html" style="--dot:var(--c-ps4)"><span class="chip"></span>06 · PlayStation 4</a></li>
+        <li><a href="psvr.html" data-file="psvr.html" style="--dot:var(--c-vr)"><span class="chip"></span>07 · PS VR / VR2</a></li>
+        <li><a href="ps5.html" data-file="ps5.html" style="--dot:var(--c-ps5)"><span class="chip"></span>08 · PlayStation 5</a></li>
+      </ul>
+      <div class="toc-group-label">REFERENCE</div>
+      <ul>
+        <li><a href="compat-matrix.html" data-file="compat-matrix.html"><span class="chip"></span>Emulator compatibility matrix</a></li>
+        <li><a href="bios.html" data-file="bios.html"><span class="chip"></span>BIOS & firmware dumping</a></li>
+        <li><a href="legal.html" data-file="legal.html"><span class="chip"></span>Legal notes</a></li>
+        <li><a href="glossary.html" data-file="glossary.html"><span class="chip"></span>Glossary</a></li>
+      </ul>
+    </nav>
+    <div class="toc-foot">
+      <p>aarvsn/rakudo<br>Community-maintained · MIT licensed</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="wrap">
+
+      <section class="console" id="psp">
+        <div class="gen-head">
+          <div>
+            <div class="codename">Handheld line · Codename "Kunoichi"</div>
+            <h2>PlayStation Portable</h2>
+          </div>
+          <div class="gen-model">PSP-1000 → PSP-N1000 (Go)</div>
+        </div>
+        <div class="colorbar"></div>
+        <p class="lede">Launched in Japan on 12 December 2004, the PSP was Sony's first handheld and the first portable to natively play movies and games from a proprietary optical disc format (UMD). It shares architectural DNA with the PS2 — its main CPU is a MIPS core descended from the same lineage as the Emotion Engine, running a custom real-time OS rather than a cut-down PS2 kernel.</p>
+
+        <h3 class="section-h"><span class="idx">§3.1</span>Core architecture</h3>
+        <table class="spec-table">
+          <tr><th>CPU</th><td>Custom Sony "Allegrex" — MIPS R4000-derived 32-bit core, clocked at 1–333 MHz dynamically, officially capped at 222 MHz for retail firmware (raised to 333 MHz via the "CPU speed" hack widely used by homebrew and later officially permitted for some titles).</td></tr>
+          <tr><th>Media Engine</th><td>A second, largely identical Allegrex core dedicated to audio/video decode (UMD movie playback, ATRAC3 audio), plus a VME (vector/media coprocessor) shared conceptually with the PS2's VU design philosophy.</td></tr>
+          <tr><th>GPU</th><td>Custom Sony GE (Graphics Engine), fixed-function T&L pipeline, no unified shaders; comparable in throughput to a mid-range PS2 GS for 2D/3D workloads at handheld power budgets.</td></tr>
+          <tr><th>Main RAM</th><td>32 MB (PSP-1000) → 64 MB (PSP-2000 onward) embedded DRAM.</td></tr>
+          <tr><th>Display</th><td>4.3" TFT LCD, 480×272 native resolution, 16:9 aspect ratio — unusually wide for its era.</td></tr>
+          <tr><th>Storage</th><td>UMD (Universal Media Disc, 1.8 GB single-layer optical) for retail games/movies; Memory Stick PRO Duo for saves, and from the PSP Go onward, 16 GB internal flash with UMD dropped entirely in favour of the PlayStation Store.</td></tr>
+          <tr><th>Wireless</th><td>802.11b Wi-Fi (ad-hoc and infrastructure), IrDA on early units; Bluetooth added only on the PSP Go.</td></tr>
+          <tr><th>Battery</th><td>Removable lithium-ion, 1200–2200 mAh depending on revision.</td></tr>
+        </table>
+
+        <h3 class="section-h"><span class="idx">§3.2</span>Notable model variants</h3>
+        <div class="variants">
+          <div class="variant"><div class="vmodel">PSP-1000 "Fat" (2004)</div><h4>Launch model</h4><p>32 MB RAM, no built-in microphone, most susceptible to analog stick drift of any revision.</p></div>
+          <div class="variant"><div class="vmodel">PSP-2000 "Slim &amp; Lite" (2007)</div><h4>Redesign</h4><p>64 MB RAM (unlocks higher-fidelity later titles), ~33% lighter, adds TV-out via component cable, built-in mic.</p></div>
+          <div class="variant"><div class="vmodel">PSP-3000 (2008)</div><h4>Screen revision</h4><p>Anti-glare LCD with drastically reduced input lag / ghosting, second built-in microphone.</p></div>
+          <div class="variant"><div class="vmodel">PSP-N1000 "Go" (2009)</div><h4>Digital-only, slide form factor</h4><p>No UMD drive, 16 GB internal storage, Bluetooth, smaller 3.8" screen — commercially unsuccessful due to losing compatibility with existing UMD libraries.</p></div>
+          <div class="variant"><div class="vmodel">PSP-E1000 "Street" (2011)</div><h4>Budget SKU</h4><p>Wi-Fi removed, mono speaker only, sold at reduced price in PAL regions.</p></div>
+        </div>
+
+        <h3 class="section-h"><span class="idx">§3.3</span>Emulation guide</h3>
+        <div class="emu-panel">
+          <div class="emu-row"><div class="k">RECOMMENDED</div><div class="v"><strong>PPSSPP</strong> — the de facto standard, actively developed since 2012, available natively on Windows, macOS, Linux, Android, iOS.</div></div>
+          <div class="emu-row"><div class="k">ACCURACY</div><div class="v"><span class="status full">FULL</span> — compatibility is effectively complete for the retail library; PPSSPP is widely regarded as one of the most accurate console emulators ever written, in part because it also functions as a from-scratch reimplementation of the PSP's system libraries rather than a pure low-level hardware emulator.</div></div>
+          <div class="emu-row"><div class="k">BIOS REQUIRED</div><div class="v">No. PPSSPP HLE-implements the PSP's firmware/kernel calls directly, so no BIOS dump is needed for the large majority of titles. A small number of titles benefit from optional font/plugin files for correct text rendering.</div></div>
+          <div class="emu-row"><div class="k">HOST REQUIREMENT</div><div class="v">Extremely low — PPSSPP runs at full native speed on essentially any smartphone from the last eight years; upscaled rendering (2x–8x internal resolution) is achievable on any 2015-or-later discrete or integrated GPU.</div></div>
+          <div class="emu-row"><div class="k">KNOWN ISSUES</div><div class="v">A handful of titles depend on precise Media Engine audio-decode timing for cutscene sync; some homebrew relying on undocumented syscalls is incompatible by design.</div></div>
+        </div>
+      </section>
+
+    </div>
+    <div class="wrap">
+      <div class="chapter-nav">
+        <a href="ps2.html"><span class="dir">&larr; previous</span><span class="label">02 · PlayStation 2</span></a>
+        <a class="next" href="ps3.html"><span class="dir">next &rarr;</span><span class="label">04 · PlayStation 3</span></a>
+      </div>
+    </div>
+    <footer>
+      <div class="wrap">
+        <p>Rakudo (楽土) is an independent, community-maintained reference. Not affiliated with, endorsed by, or sponsored by Sony Interactive Entertainment. PlayStation, PS1–PS5, DualShock, DualSense and related marks are trademarks of Sony Interactive Entertainment. Emulator names are trademarks of their respective projects, credited above.</p>
+        <p>Repository: <a href="https://github.com/aarvsn/rakudo">github.com/aarvsn/rakudo</a> · Licensed under MIT.</p>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script src="../assets/nav.js"></script>
+</body>
+</html>

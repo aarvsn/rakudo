@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlayStation 3 — hardware & emulation — Rakudo</title>
+<meta name="description" content="The Cell Broadband Engine and RSX GPU, Phat through Super Slim revisions, plus the RPCS3 emulation guide.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="shell">
+
+  <aside class="toc" aria-label="Table of contents">
+    <div class="toc-brand"><span class="mark">RAKUDO</span><span class="kanji">楽土</span></div>
+    <p class="toc-sub">The PlayStation hardware &amp; emulation reference</p>
+    <nav>
+      <div class="toc-group-label">FRONT MATTER</div>
+      <ul>
+        <li><a href="../index.html" data-file="index.html"><span class="chip"></span>Cover &amp; introduction</a></li>
+      </ul>
+      <div class="toc-group-label">HARDWARE GENERATIONS</div>
+      <ul>
+        <li><a href="ps1.html" data-file="ps1.html" style="--dot:var(--c-ps1)"><span class="chip"></span>01 · PlayStation (PS1)</a></li>
+        <li><a href="ps2.html" data-file="ps2.html" style="--dot:var(--c-ps2)"><span class="chip"></span>02 · PlayStation 2</a></li>
+        <li><a href="psp.html" data-file="psp.html" style="--dot:var(--c-psp)"><span class="chip"></span>03 · PSP</a></li>
+        <li><a href="ps3.html" data-file="ps3.html" style="--dot:var(--c-ps3)"><span class="chip"></span>04 · PlayStation 3</a></li>
+        <li><a href="vita.html" data-file="vita.html" style="--dot:var(--c-vita)"><span class="chip"></span>05 · PS Vita</a></li>
+        <li><a href="ps4.html" data-file="ps4.html" style="--dot:var(--c-ps4)"><span class="chip"></span>06 · PlayStation 4</a></li>
+        <li><a href="psvr.html" data-file="psvr.html" style="--dot:var(--c-vr)"><span class="chip"></span>07 · PS VR / VR2</a></li>
+        <li><a href="ps5.html" data-file="ps5.html" style="--dot:var(--c-ps5)"><span class="chip"></span>08 · PlayStation 5</a></li>
+      </ul>
+      <div class="toc-group-label">REFERENCE</div>
+      <ul>
+        <li><a href="compat-matrix.html" data-file="compat-matrix.html"><span class="chip"></span>Emulator compatibility matrix</a></li>
+        <li><a href="bios.html" data-file="bios.html"><span class="chip"></span>BIOS & firmware dumping</a></li>
+        <li><a href="legal.html" data-file="legal.html"><span class="chip"></span>Legal notes</a></li>
+        <li><a href="glossary.html" data-file="glossary.html"><span class="chip"></span>Glossary</a></li>
+      </ul>
+    </nav>
+    <div class="toc-foot">
+      <p>aarvsn/rakudo<br>Community-maintained · MIT licensed</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="wrap">
+
+      <section class="console" id="ps3">
+        <div class="gen-head">
+          <div>
+            <div class="codename">Generation 3 · Codename "Cell Broadband Engine"</div>
+            <h2>PlayStation 3</h2>
+          </div>
+          <div class="gen-model">CECHA00 → CECH-4300</div>
+        </div>
+        <div class="colorbar"></div>
+        <p class="lede">Launched in Japan on 11 November 2006, the PS3 paired a radically unconventional CPU — the Cell Broadband Engine, co-developed with IBM and Toshiba — with an Nvidia GPU derived from the GeForce 7 architecture. Its asymmetric multi-core design (one general-purpose core plus eight specialised co-processors) made it exceptionally powerful for well-suited workloads and exceptionally hard to program for and, later, to emulate.</p>
+
+        <h3 class="section-h"><span class="idx">§4.1</span>Core architecture</h3>
+        <table class="spec-table">
+          <tr><th>CPU</th><td>"Cell Broadband Engine" — one dual-threaded PowerPC-based PPE (Power Processing Element) at 3.2 GHz, plus 8 SPEs (Synergistic Processing Elements, SIMD-only cores with 256 KB local store each); one SPE is disabled for yield/redundancy and one is reserved by the OS hypervisor, leaving 6 SPEs available to game developers.</td></tr>
+          <tr><th>GPU</th><td>"RSX Reality Synthesizer" — Nvidia G70/G71-derived (GeForce 7800 GTX class), 550 MHz, unified-ish but still fixed-function-leaning pipeline predating DirectX 10-class unified shaders; famously RAM-starved relative to the CPU's needs.</td></tr>
+          <tr><th>Main RAM (system)</th><td>256 MB XDR DRAM (Rambus), accessed by the Cell PPE/SPEs.</td></tr>
+          <tr><th>Video RAM</th><td>256 MB GDDR3, dedicated to RSX; the two memory pools are not unified, requiring careful manual data placement by developers — a further source of emulation complexity.</td></tr>
+          <tr><th>Optical drive</th><td>Blu-ray Disc (2x, later 6x on Slim/Super Slim), backward-reads DVD and CD.</td></tr>
+          <tr><th>PS1/PS2 backward compatibility</th><td>Original 60 GB/20 GB launch units (CECHA/CECHB, "Phat") included real Emotion Engine + Graphics Synthesizer silicon for full hardware BC. Later 2007 revisions moved to software-emulated PS2 BC with reduced compatibility; from late 2007 onward PS2 BC was dropped entirely except in select PAL markets, while PS1 BC (software-emulated) was retained across the whole product line.</td></tr>
+          <tr><th>Output</th><td>HDMI 1.3 (first PlayStation with digital video out), component, composite; native output up to 1080p.</td></tr>
+          <tr><th>Storage</th><td>2.5" SATA HDD, user-swappable on every revision, from 20 GB at launch up to 500 GB on late Super Slim units.</td></tr>
+          <tr><th>Process node</th><td>90 nm Cell/RSX at launch, shrunk through 65 nm, 45 nm, and finally a combined 40 nm Cell+RSX die on Super Slim units for drastically reduced power draw and the elimination of the notorious "Yellow Light of Death" hardware failures common on Phat/Slim units.</td></tr>
+        </table>
+
+        <h3 class="section-h"><span class="idx">§4.2</span>Notable model variants</h3>
+        <div class="variants">
+          <div class="variant"><div class="vmodel">CECHA00 / CECHB00 "Phat" (2006)</div><h4>Launch, 60 GB/20 GB</h4><p>Full hardware PS2 backward compatibility, 4 USB ports, memory card reader, Wi-Fi (60 GB SKU only).</p></div>
+          <div class="variant"><div class="vmodel">CECHExx–CECHHxx (2007–08)</div><h4>Cost-reduced Phat</h4><p>PS2 hardware BC removed; software emulation only, then removed outright on most SKUs.</p></div>
+          <div class="variant"><div class="vmodel">CECH-2xxx "Slim" (2009)</div><h4>Major redesign</h4><p>~66% smaller, 45 nm Cell, glossy top, no PS2 BC, introduced the "PS3 Slim" curved form factor.</p></div>
+          <div class="variant"><div class="vmodel">CECH-4xxx "Super Slim" (2012)</div><h4>Final revision</h4><p>Sliding disc cover instead of a slot/tray, further shrunk 40 nm combined die, up to 500 GB HDD.</p></div>
+        </div>
+
+        <h3 class="section-h"><span class="idx">§4.3</span>Emulation guide</h3>
+        <div class="emu-panel">
+          <div class="emu-row"><div class="k">RECOMMENDED</div><div class="v"><strong>RPCS3</strong> — the only actively maintained PS3 emulator, in development since 2011 with dramatic accuracy gains from 2017 onward.</div></div>
+          <div class="emu-row"><div class="k">ACCURACY</div><div class="v"><span class="status high">HIGH</span> — the majority of the retail library is playable at full speed on strong host hardware; PPU (PowerPC) emulation is essentially solved, SPU emulation (recompiled JIT) is the main remaining performance-sensitive area.</div></div>
+          <div class="emu-row"><div class="k">FIRMWARE REQUIRED</div><div class="v">Yes. RPCS3 requires the official PS3 system firmware (a <code>PS3UPDAT.PUP</code> file, obtainable from Sony's own update servers) to be installed inside the emulator to supply system libraries (<code>sprx</code> modules) that RPCS3 does not reimplement from scratch — this is a firmware install, not a proprietary BIOS dump, and does not require owning a PS3 to obtain legally.</div></div>
+          <div class="emu-row"><div class="k">HOST REQUIREMENT</div><div class="v">Demanding by emulation standards: a modern 6+ core / 12+ thread CPU with high per-core performance is strongly recommended for SPU-heavy titles, plus a Vulkan-capable GPU roughly equivalent to a GTX 1660 / RX 5600 or better for full-speed, native-resolution play; some of the most demanding first-party titles remain difficult to sustain at a locked framerate even on high-end 2025-class hardware.</div></div>
+          <div class="emu-row"><div class="k">KNOWN ISSUES</div><div class="v">A minority of titles that lean heavily on precise SPU scheduling or PS3-specific GPU quirks (RSX "flip" timing) can exhibit stutter, audio crackle, or minor visual differences; PS2/PS1 backward-compatible discs played on a PS3 are not covered by RPCS3 and should instead be run on PCSX2/DuckStation directly.</div></div>
+        </div>
+      </section>
+
+    </div>
+    <div class="wrap">
+      <div class="chapter-nav">
+        <a href="psp.html"><span class="dir">&larr; previous</span><span class="label">03 · PSP</span></a>
+        <a class="next" href="vita.html"><span class="dir">next &rarr;</span><span class="label">05 · PS Vita</span></a>
+      </div>
+    </div>
+    <footer>
+      <div class="wrap">
+        <p>Rakudo (楽土) is an independent, community-maintained reference. Not affiliated with, endorsed by, or sponsored by Sony Interactive Entertainment. PlayStation, PS1–PS5, DualShock, DualSense and related marks are trademarks of Sony Interactive Entertainment. Emulator names are trademarks of their respective projects, credited above.</p>
+        <p>Repository: <a href="https://github.com/aarvsn/rakudo">github.com/aarvsn/rakudo</a> · Licensed under MIT.</p>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script src="../assets/nav.js"></script>
+</body>
+</html>

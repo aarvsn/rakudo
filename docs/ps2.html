@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlayStation 2 — hardware & emulation — Rakudo</title>
+<meta name="description" content="The Emotion Engine, Graphics Synthesizer, and VU0/VU1 vector units behind the best-selling console ever, plus the PCSX2 emulation guide.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="shell">
+
+  <aside class="toc" aria-label="Table of contents">
+    <div class="toc-brand"><span class="mark">RAKUDO</span><span class="kanji">楽土</span></div>
+    <p class="toc-sub">The PlayStation hardware &amp; emulation reference</p>
+    <nav>
+      <div class="toc-group-label">FRONT MATTER</div>
+      <ul>
+        <li><a href="../index.html" data-file="index.html"><span class="chip"></span>Cover &amp; introduction</a></li>
+      </ul>
+      <div class="toc-group-label">HARDWARE GENERATIONS</div>
+      <ul>
+        <li><a href="ps1.html" data-file="ps1.html" style="--dot:var(--c-ps1)"><span class="chip"></span>01 · PlayStation (PS1)</a></li>
+        <li><a href="ps2.html" data-file="ps2.html" style="--dot:var(--c-ps2)"><span class="chip"></span>02 · PlayStation 2</a></li>
+        <li><a href="psp.html" data-file="psp.html" style="--dot:var(--c-psp)"><span class="chip"></span>03 · PSP</a></li>
+        <li><a href="ps3.html" data-file="ps3.html" style="--dot:var(--c-ps3)"><span class="chip"></span>04 · PlayStation 3</a></li>
+        <li><a href="vita.html" data-file="vita.html" style="--dot:var(--c-vita)"><span class="chip"></span>05 · PS Vita</a></li>
+        <li><a href="ps4.html" data-file="ps4.html" style="--dot:var(--c-ps4)"><span class="chip"></span>06 · PlayStation 4</a></li>
+        <li><a href="psvr.html" data-file="psvr.html" style="--dot:var(--c-vr)"><span class="chip"></span>07 · PS VR / VR2</a></li>
+        <li><a href="ps5.html" data-file="ps5.html" style="--dot:var(--c-ps5)"><span class="chip"></span>08 · PlayStation 5</a></li>
+      </ul>
+      <div class="toc-group-label">REFERENCE</div>
+      <ul>
+        <li><a href="compat-matrix.html" data-file="compat-matrix.html"><span class="chip"></span>Emulator compatibility matrix</a></li>
+        <li><a href="bios.html" data-file="bios.html"><span class="chip"></span>BIOS & firmware dumping</a></li>
+        <li><a href="legal.html" data-file="legal.html"><span class="chip"></span>Legal notes</a></li>
+        <li><a href="glossary.html" data-file="glossary.html"><span class="chip"></span>Glossary</a></li>
+      </ul>
+    </nav>
+    <div class="toc-foot">
+      <p>aarvsn/rakudo<br>Community-maintained · MIT licensed</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="wrap">
+
+      <section class="console" id="ps2">
+        <div class="gen-head">
+          <div>
+            <div class="codename">Generation 2 · Codename "Emotion Engine"</div>
+            <h2>PlayStation 2</h2>
+          </div>
+          <div class="gen-model">SCPH-10000 → SCPH-9000x</div>
+        </div>
+        <div class="colorbar"></div>
+        <p class="lede">Launched in Japan on 4 March 2000, the PS2 remains the best-selling console of all time at roughly 160 million units sold. Its defining trait is a split, highly parallel architecture built around two custom Sony/Toshiba processors — the Emotion Engine and the Graphics Synthesizer — designed for brute-force vector throughput rather than general-purpose flexibility, which is the root cause of most of the platform's emulation difficulty.</p>
+
+        <h3 class="section-h"><span class="idx">§2.1</span>Core architecture</h3>
+        <table class="spec-table">
+          <tr><th>CPU</th><td>"Emotion Engine" — custom 128-bit MIPS III/IV-based core at 294.912 MHz (299 MHz on later revisions), with two integrated vector units (VU0 tightly coupled as a coprocessor, VU1 loosely coupled with its own 16 KB micro-instruction memory) plus an on-die IPU (Image Processing Unit, MPEG-2 decode for DVD video).</td></tr>
+          <tr><th>Vector Units</th><td>VU0 + VU1: superscalar FPU-based DSPs used for geometry transform, skinning, and particle simulation; combined the EE was rated at a peak 6.2 GFLOPS.</td></tr>
+          <tr><th>GPU</th><td>"Graphics Synthesizer" (GS) — custom rasterizer at 147.456 MHz, fixed-function (no programmable shaders), 2560-bit-wide internal bus to its own embedded memory, no texture compression support (a frequent cause of the PS2's blurry/aliased look versus contemporaries).</td></tr>
+          <tr><th>eDRAM</th><td>4 MB embedded DRAM on the GS die itself, holding framebuffer + Z-buffer + textures simultaneously — the small pool forces frequent texture-cache thrashing, a major emulation performance bottleneck.</td></tr>
+          <tr><th>Main RAM</th><td>32 MB Direct RDRAM, 400 MHz bus (3.2 GB/s bandwidth to the EE).</td></tr>
+          <tr><th>Sound</th><td>"SPU2" custom chip, 48 hardware voices, 2 MB dedicated sound RAM, ADPCM + PCM playback.</td></tr>
+          <tr><th>I/O Processor</th><td>A full PS1 CPU (R3000A) repurposed as the IOP, handling controller/memory-card I/O, CD/DVD access and — critically — providing full hardware-level PS1 backward compatibility.</td></tr>
+          <tr><th>Optical drive</th><td>DVD-ROM (4x), also reads CD-ROM for PS1 titles; region-coded via disc + BIOS check.</td></tr>
+          <tr><th>Output</th><td>Composite, S-Video, RGB SCART, component (progressive scan support added via firmware from launch on supporting titles), no native HDMI on any revision.</td></tr>
+          <tr><th>Storage expansion</th><td>Internal 3.5" IDE HDD bay (SCPH-10000/30000 series, via the Network Adaptor add-on) supporting select online titles and the "HDD Boot" homebrew ecosystem.</td></tr>
+          <tr><th>Process node</th><td>180 nm EE+GS at launch; both cores were eventually merged onto a single 90 nm die ("EE+GS") in the SCPH-7000x slim revisions, drastically cutting cost and power draw.</td></tr>
+        </table>
+
+        <h3 class="section-h"><span class="idx">§2.2</span>Notable model variants</h3>
+        <div class="variants">
+          <div class="variant"><div class="vmodel">SCPH-10000 / 15000 (JP, 2000)</div><h4>Launch "fat" units</h4><p>i.LINK (FireWire) port present, dropped from most later fat revisions.</p></div>
+          <div class="variant"><div class="vmodel">SCPH-3900x (2002)</div><h4>PSTwo prototype-adjacent revision</h4><p>Widely considered the most reliable fat motherboard for laser longevity.</p></div>
+          <div class="variant"><div class="vmodel">SCPH-7000x "Slim" (2004)</div><h4>Single-chip EE+GS</h4><p>~40% smaller, no HDD bay, built-in Ethernet, external power brick, top-loading slot drive.</p></div>
+          <div class="variant"><div class="vmodel">SCPH-9000x (2007, final revision)</div><h4>Last production run</h4><p>Refined power supply, produced until PS2 manufacturing ended in December 2012 in Japan — the longest production run of any Sony console.</p></div>
+        </div>
+
+        <h3 class="section-h"><span class="idx">§2.3</span>Emulation guide</h3>
+        <div class="emu-panel">
+          <div class="emu-row"><div class="k">RECOMMENDED</div><div class="v"><strong>PCSX2</strong> — effectively the only actively developed, viable PS2 emulator; no meaningful competitor exists as of 2026.</div></div>
+          <div class="emu-row"><div class="k">ACCURACY</div><div class="v"><span class="status high">HIGH</span> — the vast majority of the ~4,000-title library runs correctly; the harder-to-emulate outliers are almost always titles that rely on exact VU1 microcode timing or exotic GS blending tricks.</div></div>
+          <div class="emu-row"><div class="k">BIOS REQUIRED</div><div class="v">Yes, always. PCSX2 has no HLE BIOS mode — you must dump the BIOS from your own console (region-matched to your game discs) before the emulator will boot anything.</div></div>
+          <div class="emu-row"><div class="k">HOST REQUIREMENT</div><div class="v">Modern 4+ core CPU with strong single-thread performance (PCSX2's EE core recompiler is largely single-threaded); a discrete GPU is recommended once internal resolution is pushed above native for the GS software fallback paths some titles require.</div></div>
+          <div class="emu-row"><div class="k">RENDERER</div><div class="v">Vulkan is the current recommended graphics backend for both performance and correctness; the legacy OpenGL/D3D11 backends remain for compatibility fallback.</div></div>
+          <div class="emu-row"><div class="k">KNOWN ISSUES</div><div class="v">A small set of titles exhibit GS "texture bleeding" or z-fighting due to the software-rounding differences versus the eDRAM's exact behaviour; a handful of PS1 BC titles played through the PS2 IOP path have separate compatibility quirks from native PS1 emulators.</div></div>
+        </div>
+      </section>
+
+    </div>
+    <div class="wrap">
+      <div class="chapter-nav">
+        <a href="ps1.html"><span class="dir">&larr; previous</span><span class="label">01 · PlayStation (PS1)</span></a>
+        <a class="next" href="psp.html"><span class="dir">next &rarr;</span><span class="label">03 · PSP</span></a>
+      </div>
+    </div>
+    <footer>
+      <div class="wrap">
+        <p>Rakudo (楽土) is an independent, community-maintained reference. Not affiliated with, endorsed by, or sponsored by Sony Interactive Entertainment. PlayStation, PS1–PS5, DualShock, DualSense and related marks are trademarks of Sony Interactive Entertainment. Emulator names are trademarks of their respective projects, credited above.</p>
+        <p>Repository: <a href="https://github.com/aarvsn/rakudo">github.com/aarvsn/rakudo</a> · Licensed under MIT.</p>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script src="../assets/nav.js"></script>
+</body>
+</html>

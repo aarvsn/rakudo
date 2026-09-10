@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlayStation 5 — hardware & emulation — Rakudo</title>
+<meta name="description" content="The Zen 2 / RDNA 2 architecture behind the base PS5 and PS5 Pro, and an honest status report on PS5 emulation: there isn't one yet.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="shell">
+
+  <aside class="toc" aria-label="Table of contents">
+    <div class="toc-brand"><span class="mark">RAKUDO</span><span class="kanji">楽土</span></div>
+    <p class="toc-sub">The PlayStation hardware &amp; emulation reference</p>
+    <nav>
+      <div class="toc-group-label">FRONT MATTER</div>
+      <ul>
+        <li><a href="../index.html" data-file="index.html"><span class="chip"></span>Cover &amp; introduction</a></li>
+      </ul>
+      <div class="toc-group-label">HARDWARE GENERATIONS</div>
+      <ul>
+        <li><a href="ps1.html" data-file="ps1.html" style="--dot:var(--c-ps1)"><span class="chip"></span>01 · PlayStation (PS1)</a></li>
+        <li><a href="ps2.html" data-file="ps2.html" style="--dot:var(--c-ps2)"><span class="chip"></span>02 · PlayStation 2</a></li>
+        <li><a href="psp.html" data-file="psp.html" style="--dot:var(--c-psp)"><span class="chip"></span>03 · PSP</a></li>
+        <li><a href="ps3.html" data-file="ps3.html" style="--dot:var(--c-ps3)"><span class="chip"></span>04 · PlayStation 3</a></li>
+        <li><a href="vita.html" data-file="vita.html" style="--dot:var(--c-vita)"><span class="chip"></span>05 · PS Vita</a></li>
+        <li><a href="ps4.html" data-file="ps4.html" style="--dot:var(--c-ps4)"><span class="chip"></span>06 · PlayStation 4</a></li>
+        <li><a href="psvr.html" data-file="psvr.html" style="--dot:var(--c-vr)"><span class="chip"></span>07 · PS VR / VR2</a></li>
+        <li><a href="ps5.html" data-file="ps5.html" style="--dot:var(--c-ps5)"><span class="chip"></span>08 · PlayStation 5</a></li>
+      </ul>
+      <div class="toc-group-label">REFERENCE</div>
+      <ul>
+        <li><a href="compat-matrix.html" data-file="compat-matrix.html"><span class="chip"></span>Emulator compatibility matrix</a></li>
+        <li><a href="bios.html" data-file="bios.html"><span class="chip"></span>BIOS & firmware dumping</a></li>
+        <li><a href="legal.html" data-file="legal.html"><span class="chip"></span>Legal notes</a></li>
+        <li><a href="glossary.html" data-file="glossary.html"><span class="chip"></span>Glossary</a></li>
+      </ul>
+    </nav>
+    <div class="toc-foot">
+      <p>aarvsn/rakudo<br>Community-maintained · MIT licensed</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="wrap">
+
+      <section class="console" id="ps5">
+        <div class="gen-head">
+          <div>
+            <div class="codename">Generation 5 · Custom Zen 2 / RDNA 2</div>
+            <h2>PlayStation 5</h2>
+          </div>
+          <div class="gen-model">CFI-1000 → CFI-7000 (Pro)</div>
+        </div>
+        <div class="colorbar"></div>
+        <p class="lede">Launched on 12 November 2020 (US) and 19 November 2020 (JP/EU), the PS5 continued the x86-64 semi-custom AMD approach of the PS4, moving to Zen 2 CPU cores and RDNA 2 graphics with hardware-accelerated ray tracing, alongside a custom I/O complex built around a very fast SSD that Sony's own engineers positioned as a headline architectural feature in its own right. The mid-generation PS5 Pro followed on 7 November 2024.</p>
+
+        <h3 class="section-h"><span class="idx">§8.1</span>Core architecture (base PS5)</h3>
+        <table class="spec-table">
+          <tr><th>APU</th><td>Semi-custom AMD "Oberon" — 8-core AMD Zen 2 CPU at up to 3.5 GHz (variable frequency, SMT enabled), paired with a custom RDNA 2 GPU on the same die.</td></tr>
+          <tr><th>GPU</th><td>36 compute units at up to 2.23 GHz, 10.28 TFLOPS peak single-precision, hardware ray-tracing acceleration (intersection-testing hardware per CU), variable frequency shared with the CPU under a fixed total power/thermal budget rather than fixed clocks for each.</td></tr>
+          <tr><th>System memory</th><td>16 GB GDDR6, 256-bit bus, 448 GB/s bandwidth, unified between CPU and GPU.</td></tr>
+          <tr><th>Storage</th><td>Custom 825 GB NVMe SSD with a dedicated hardware decompression block (Kraken-based) rated at up to 5.5 GB/s raw / ~8–9 GB/s effective compressed throughput; internal storage is expandable via a user-installed M.2 NVMe slot meeting Sony's minimum speed requirements, and external USB HDDs are supported for PS4-title storage/playback only.</td></tr>
+          <tr><th>Optical drive</th><td>4K UHD Blu-ray (present on "disc edition" models only; a "Digital Edition" SKU ships with no optical drive at all).</td></tr>
+          <tr><th>Output</th><td>HDMI 2.1, native 4K up to 120 Hz, 8K output supported by the port spec though rarely exercised by software; VRR (variable refresh rate) support added via a post-launch firmware update.</td></tr>
+          <tr><th>Backward compatibility</th><td>Near-complete hardware-assisted PS4 backward compatibility (the overwhelming majority of the PS4 library runs natively, generally with improved load times and frame-rate boosts on supporting titles); no native PS1/PS2/PS3 backward compatibility.</td></tr>
+          <tr><th>Process node</th><td>7 nm (TSMC).</td></tr>
+        </table>
+
+        <h3 class="section-h"><span class="idx">§8.2</span>PS5 Pro (CFI-7000 series, 2024)</h3>
+        <table class="spec-table">
+          <caption>Mid-generation refresh — figures per Sony's official technical specifications released alongside the Pro's launch.</caption>
+          <tr><th>CPU</th><td>Same 8-core Zen 2 die as the base PS5, with an optional "High CPU Frequency Mode" toggle developers can enable per-title, raising the clock ceiling by roughly 10% to 3.85 GHz; enabling it modestly reduces available GPU power headroom.</td></tr>
+          <tr><th>GPU</th><td>Larger RDNA-derived GPU rated at 33.5 TFLOPS peak (Sony's own comparative framing puts real-world rendering performance roughly 45% above the base PS5 due to architectural differences that make raw TFLOPS figures not directly comparable across the two GPUs), 2–3x higher ray-tracing throughput.</td></tr>
+          <tr><th>System memory</th><td>16 GB GDDR6 (unchanged capacity), bandwidth raised from 448 GB/s to 576 GB/s.</td></tr>
+          <tr><th>Upscaling</th><td>"PSSR" (PlayStation Spectral Super Resolution) — a machine-learning upscaler run on dedicated AI-accelerator hardware, Sony's answer to Nvidia DLSS/AMD FSR.</td></tr>
+          <tr><th>Storage</th><td>1 TB internal SSD (base Pro configuration), same expansion slot as the base PS5.</td></tr>
+          <tr><th>Disc drive</th><td>Sold in a disc-less base configuration with an official detachable Ultra HD Blu-ray drive available as a separate accessory.</td></tr>
+        </table>
+
+        <h3 class="section-h"><span class="idx">§8.3</span>Notable model variants</h3>
+        <div class="variants">
+          <div class="variant"><div class="vmodel">CFI-1000 (2020)</div><h4>Launch models</h4><p>Disc and Digital Edition; largest physical footprint of any PS5 revision, external power brick-free (internal PSU).</p></div>
+          <div class="variant"><div class="vmodel">CFI-2000 "Slim" (2023)</div><h4>Size-reduced redesign</h4><p>~30% smaller/lighter, detachable disc drive available even on the "Digital"-configured base unit, matte side-panel finish.</p></div>
+          <div class="variant"><div class="vmodel">CFI-7000 "Pro" (2024)</div><h4>Mid-gen refresh</h4><p>Detached-drive-by-default industrial design shared with the Slim, distinguished by a taller chassis to accommodate the larger cooling solution.</p></div>
+        </div>
+
+        <h3 class="section-h"><span class="idx">§8.4</span>Emulation guide</h3>
+        <div class="emu-panel">
+          <div class="emu-row"><div class="k">STATUS</div><div class="v"><span class="status none">NONE</span> — no functional PS5 emulator exists as of this edition. The architectural gap that made PS4 emulation approachable (a standard x86-64 CPU) still applies, but the PS5's GPU feature set (hardware ray-tracing, a much larger and more complex API surface, and a custom I/O/decompression pipeline central to how games are built) represents a substantially larger reverse-engineering effort than any prior generation.</div></div>
+          <div class="emu-row"><div class="k">WHAT TO EXPECT</div><div class="v">Based on the multi-year gap between each console's release and its first playable emulator (PS3: ~5 years to early homebrew-level RPCS3 builds, full library maturity took closer to a decade; PS4: shadPS4's earliest playable builds arrived roughly 8–9 years after launch), meaningful PS5 emulation is not expected before the early-to-mid 2030s at the soonest, and full-library maturity considerably later than that.</div></div>
+          <div class="emu-row"><div class="k">RECOMMENDATION</div><div class="v">There is currently no legitimate substitute for owning the hardware to play PS5 software. Be skeptical of any tool, website, or downloadable application claiming to be a "PS5 emulator" in 2026 — none of the projects tracked by the emulation development community have reached a publicly playable state, and software claiming otherwise is malware.</div></div>
+        </div>
+      </section>
+
+    </div>
+    <div class="wrap">
+      <div class="chapter-nav">
+        <a href="psvr.html"><span class="dir">&larr; previous</span><span class="label">07 · PS VR / VR2</span></a>
+        <a class="next" href="compat-matrix.html"><span class="dir">next &rarr;</span><span class="label">Emulator compatibility matrix</span></a>
+      </div>
+    </div>
+    <footer>
+      <div class="wrap">
+        <p>Rakudo (楽土) is an independent, community-maintained reference. Not affiliated with, endorsed by, or sponsored by Sony Interactive Entertainment. PlayStation, PS1–PS5, DualShock, DualSense and related marks are trademarks of Sony Interactive Entertainment. Emulator names are trademarks of their respective projects, credited above.</p>
+        <p>Repository: <a href="https://github.com/aarvsn/rakudo">github.com/aarvsn/rakudo</a> · Licensed under MIT.</p>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script src="../assets/nav.js"></script>
+</body>
+</html>

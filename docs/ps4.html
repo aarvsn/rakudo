@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlayStation 4 — hardware & emulation — Rakudo</title>
+<meta name="description" content="The Jaguar CPU and GCN GPU behind Sony's move to x86-64, base and Pro, plus the shadPS4 emulation guide.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="shell">
+
+  <aside class="toc" aria-label="Table of contents">
+    <div class="toc-brand"><span class="mark">RAKUDO</span><span class="kanji">楽土</span></div>
+    <p class="toc-sub">The PlayStation hardware &amp; emulation reference</p>
+    <nav>
+      <div class="toc-group-label">FRONT MATTER</div>
+      <ul>
+        <li><a href="../index.html" data-file="index.html"><span class="chip"></span>Cover &amp; introduction</a></li>
+      </ul>
+      <div class="toc-group-label">HARDWARE GENERATIONS</div>
+      <ul>
+        <li><a href="ps1.html" data-file="ps1.html" style="--dot:var(--c-ps1)"><span class="chip"></span>01 · PlayStation (PS1)</a></li>
+        <li><a href="ps2.html" data-file="ps2.html" style="--dot:var(--c-ps2)"><span class="chip"></span>02 · PlayStation 2</a></li>
+        <li><a href="psp.html" data-file="psp.html" style="--dot:var(--c-psp)"><span class="chip"></span>03 · PSP</a></li>
+        <li><a href="ps3.html" data-file="ps3.html" style="--dot:var(--c-ps3)"><span class="chip"></span>04 · PlayStation 3</a></li>
+        <li><a href="vita.html" data-file="vita.html" style="--dot:var(--c-vita)"><span class="chip"></span>05 · PS Vita</a></li>
+        <li><a href="ps4.html" data-file="ps4.html" style="--dot:var(--c-ps4)"><span class="chip"></span>06 · PlayStation 4</a></li>
+        <li><a href="psvr.html" data-file="psvr.html" style="--dot:var(--c-vr)"><span class="chip"></span>07 · PS VR / VR2</a></li>
+        <li><a href="ps5.html" data-file="ps5.html" style="--dot:var(--c-ps5)"><span class="chip"></span>08 · PlayStation 5</a></li>
+      </ul>
+      <div class="toc-group-label">REFERENCE</div>
+      <ul>
+        <li><a href="compat-matrix.html" data-file="compat-matrix.html"><span class="chip"></span>Emulator compatibility matrix</a></li>
+        <li><a href="bios.html" data-file="bios.html"><span class="chip"></span>BIOS & firmware dumping</a></li>
+        <li><a href="legal.html" data-file="legal.html"><span class="chip"></span>Legal notes</a></li>
+        <li><a href="glossary.html" data-file="glossary.html"><span class="chip"></span>Glossary</a></li>
+      </ul>
+    </nav>
+    <div class="toc-foot">
+      <p>aarvsn/rakudo<br>Community-maintained · MIT licensed</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="wrap">
+
+      <section class="console" id="ps4">
+        <div class="gen-head">
+          <div>
+            <div class="codename">Generation 4 · x86-64 unification</div>
+            <h2>PlayStation 4</h2>
+          </div>
+          <div class="gen-model">CUH-1000 → CUH-7200 (Pro)</div>
+        </div>
+        <div class="colorbar"></div>
+        <p class="lede">Launched in North America on 15 November 2013, the PS4 abandoned PlayStation's tradition of exotic, hard-to-program custom silicon in favour of a semi-custom AMD APU built on standard x86-64 (Jaguar) CPU cores and a GCN-architecture GPU — the same broad architecture family used in contemporary Windows PCs — which made third-party development dramatically easier and, eventually, made emulation development more approachable than any prior generation.</p>
+
+        <h3 class="section-h"><span class="idx">§6.1</span>Core architecture</h3>
+        <table class="spec-table">
+          <tr><th>APU</th><td>Semi-custom AMD "Liverpool" — 8-core AMD Jaguar CPU (two clusters of 4 cores) at 1.6 GHz, paired on-die with a GCN 1.1 (Radeon-class) GPU.</td></tr>
+          <tr><th>GPU</th><td>1152 shader cores (18 compute units), 800 MHz, ~1.84 TFLOPS single-precision; PS4 Pro raises this to 2304 shader cores (36 CUs) at 911 MHz, ~4.2 TFLOPS.</td></tr>
+          <tr><th>System memory</th><td>8 GB GDDR5 unified pool shared between CPU and GPU, 176 GB/s bandwidth (base); PS4 Pro retains 8 GB GDDR5 at 218 GB/s.</td></tr>
+          <tr><th>Storage</th><td>2.5" SATA HDD (500 GB base at launch, up to 1 TB on later SKUs and the Pro), user-replaceable; supports user-installed SSDs though the SATA II interface caps real-world gains.</td></tr>
+          <tr><th>Optical drive</th><td>Blu-ray (6x BD-ROM), DVD playback; no 4K UHD Blu-ray support on any PS4 model.</td></tr>
+          <tr><th>Output</th><td>HDMI 1.4 (base), HDMI 2.0b (Pro/Slim, enabling native 4K output and HDR); base PS4 outputs up to 1080p, Pro supports checkerboard/dynamic-resolution "4K" rendering.</td></tr>
+          <tr><th>Backward compatibility</th><td>None at the hardware or native-emulation level; select PS1/PS2/PS3 titles were made available only via Sony's since-discontinued "PS Now"-style cloud-streaming service, not local emulation.</td></tr>
+          <tr><th>Process node</th><td>28 nm at launch (base + original Pro), later revisions of the base model (CUH-2000 "Slim") shrunk to a more efficient 16 nm process for reduced power draw and heat.</td></tr>
+        </table>
+
+        <h3 class="section-h"><span class="idx">§6.2</span>Notable model variants</h3>
+        <div class="variants">
+          <div class="variant"><div class="vmodel">CUH-1000 (2013)</div><h4>Launch model</h4><p>28 nm APU, prone to a higher failure rate on early manufacturing runs than later revisions; optical audio-out present (removed on Slim).</p></div>
+          <div class="variant"><div class="vmodel">CUH-2000 "Slim" (2016)</div><h4>Cost/size reduction</h4><p>16 nm APU, ~11 mm thinner, matte finish, USB-C-shaped (but USB 2.0 spec) port added on later revisions.</p></div>
+          <div class="variant"><div class="vmodel">CUH-7000 "Pro" (2016)</div><h4>Mid-gen performance refresh</h4><p>Doubled GPU compute units, boost-mode CPU clock, no native 4K Blu-ray or disc-drive changes; first console in the line to explicitly target checkerboard 4K rendering rather than native resolution increases.</p></div>
+        </div>
+
+        <h3 class="section-h"><span class="idx">§6.3</span>Emulation guide</h3>
+        <div class="emu-panel">
+          <div class="emu-row"><div class="k">RECOMMENDED</div><div class="v"><strong>shadPS4</strong> — the leading open-source PS4 emulation project as of 2026; a small number of alternative/derivative forks exist but track shadPS4's core progress closely.</div></div>
+          <div class="emu-row"><div class="k">ACCURACY</div><div class="v"><span class="status early">EARLY</span> — PS4 emulation is significantly younger and less mature than PS1–PS3 emulation. A meaningful and growing subset of the 2D and lighter 3D library boots and is playable; demanding AAA titles remain unreliable or unplayable. Treat this generation as an actively moving target rather than a solved platform.</div></div>
+          <div class="emu-row"><div class="k">FIRMWARE REQUIRED</div><div class="v">No BIOS/firmware dump is required — shadPS4 reimplements the PS4's system libraries (a "libSceX" HLE approach similar in philosophy to PPSSPP) rather than running Sony's own firmware.</div></div>
+          <div class="emu-row"><div class="k">HOST REQUIREMENT</div><div class="v">High-end 2023-or-later x86-64 CPU with strong single/few-thread performance and a modern GPU with mature Vulkan drivers; given the Jaguar CPU's low per-core clock, most modern desktop CPUs already exceed it several times over, so the GPU shader-translation and system-call-emulation layers are the current bottleneck rather than raw compute.</div></div>
+          <div class="emu-row"><div class="k">KNOWN ISSUES</div><div class="v">Frequent title-specific crashes, missing audio, and shader-compilation stutter are expected at this stage of the project's maturity; check the emulator's own compatibility tracker before assuming any specific title is playable.</div></div>
+        </div>
+      </section>
+
+    </div>
+    <div class="wrap">
+      <div class="chapter-nav">
+        <a href="vita.html"><span class="dir">&larr; previous</span><span class="label">05 · PS Vita</span></a>
+        <a class="next" href="psvr.html"><span class="dir">next &rarr;</span><span class="label">07 · PS VR / VR2</span></a>
+      </div>
+    </div>
+    <footer>
+      <div class="wrap">
+        <p>Rakudo (楽土) is an independent, community-maintained reference. Not affiliated with, endorsed by, or sponsored by Sony Interactive Entertainment. PlayStation, PS1–PS5, DualShock, DualSense and related marks are trademarks of Sony Interactive Entertainment. Emulator names are trademarks of their respective projects, credited above.</p>
+        <p>Repository: <a href="https://github.com/aarvsn/rakudo">github.com/aarvsn/rakudo</a> · Licensed under MIT.</p>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script src="../assets/nav.js"></script>
+</body>
+</html>

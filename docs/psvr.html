@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PS VR / VR2 — hardware — Rakudo</title>
+<meta name="description" content="Display, tracking, and processing differences between the original PlayStation VR and PS VR2.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="shell">
+
+  <aside class="toc" aria-label="Table of contents">
+    <div class="toc-brand"><span class="mark">RAKUDO</span><span class="kanji">楽土</span></div>
+    <p class="toc-sub">The PlayStation hardware &amp; emulation reference</p>
+    <nav>
+      <div class="toc-group-label">FRONT MATTER</div>
+      <ul>
+        <li><a href="../index.html" data-file="index.html"><span class="chip"></span>Cover &amp; introduction</a></li>
+      </ul>
+      <div class="toc-group-label">HARDWARE GENERATIONS</div>
+      <ul>
+        <li><a href="ps1.html" data-file="ps1.html" style="--dot:var(--c-ps1)"><span class="chip"></span>01 · PlayStation (PS1)</a></li>
+        <li><a href="ps2.html" data-file="ps2.html" style="--dot:var(--c-ps2)"><span class="chip"></span>02 · PlayStation 2</a></li>
+        <li><a href="psp.html" data-file="psp.html" style="--dot:var(--c-psp)"><span class="chip"></span>03 · PSP</a></li>
+        <li><a href="ps3.html" data-file="ps3.html" style="--dot:var(--c-ps3)"><span class="chip"></span>04 · PlayStation 3</a></li>
+        <li><a href="vita.html" data-file="vita.html" style="--dot:var(--c-vita)"><span class="chip"></span>05 · PS Vita</a></li>
+        <li><a href="ps4.html" data-file="ps4.html" style="--dot:var(--c-ps4)"><span class="chip"></span>06 · PlayStation 4</a></li>
+        <li><a href="psvr.html" data-file="psvr.html" style="--dot:var(--c-vr)"><span class="chip"></span>07 · PS VR / VR2</a></li>
+        <li><a href="ps5.html" data-file="ps5.html" style="--dot:var(--c-ps5)"><span class="chip"></span>08 · PlayStation 5</a></li>
+      </ul>
+      <div class="toc-group-label">REFERENCE</div>
+      <ul>
+        <li><a href="compat-matrix.html" data-file="compat-matrix.html"><span class="chip"></span>Emulator compatibility matrix</a></li>
+        <li><a href="bios.html" data-file="bios.html"><span class="chip"></span>BIOS & firmware dumping</a></li>
+        <li><a href="legal.html" data-file="legal.html"><span class="chip"></span>Legal notes</a></li>
+        <li><a href="glossary.html" data-file="glossary.html"><span class="chip"></span>Glossary</a></li>
+      </ul>
+    </nav>
+    <div class="toc-foot">
+      <p>aarvsn/rakudo<br>Community-maintained · MIT licensed</p>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="wrap">
+
+      <section class="console" id="psvr">
+        <div class="gen-head">
+          <div>
+            <div class="codename">Peripheral line</div>
+            <h2>PlayStation VR &amp; VR2</h2>
+          </div>
+          <div class="gen-model">CUH-ZVR1/2 · CFI-ZVR1</div>
+        </div>
+        <div class="colorbar"></div>
+        <p class="lede">PS VR launched in October 2016 as an external headset tethered to the PS4 via a breakout processing box; PS VR2 launched in February 2023 as a PS5-exclusive successor with a direct single-cable USB-C connection and no external processing unit, since the PS5's own hardware absorbed the reprojection/compositing work the original PS VR box performed externally.</p>
+
+        <h3 class="section-h"><span class="idx">§7.1</span>Core specifications</h3>
+        <table class="spec-table">
+          <tr><th>PS VR display</th><td>5.7" OLED, 1920×1080 total (960×1080 per eye), 90/120 Hz, ~100° field of view.</td></tr>
+          <tr><th>PS VR processing</th><td>External "Processor Unit" box handles social screen mirroring, 3D audio, and a technique called reprojection to smooth frame delivery; the PS4 itself renders the game.</td></tr>
+          <tr><th>PS VR2 display</th><td>Dual 2000×2040 OLED panels (one per eye), 90/120 Hz, ~110° field of view, HDR support, eye-tracking built in (enabling foveated rendering).</td></tr>
+          <tr><th>PS VR2 connection</th><td>Single USB-C cable directly to the PS5, no external breakout box; the PS5's own SoC performs all compositing.</td></tr>
+          <tr><th>Tracking</th><td>PS VR: external PlayStation Camera, outside-in tracking. PS VR2: inside-out tracking via four embedded cameras on the headset itself, no external camera required.</td></tr>
+        </table>
+        <div class="callout">
+          <p><strong>Emulation status:</strong> Neither PS VR nor PS VR2 has a meaningful standalone software emulator, since VR titles depend on the host console's GPU output and real-time head tracking rather than the headset containing independent "hardware" to emulate in the traditional sense. PS VR (1) titles are, in practice, addressed by whatever level of PS4 emulation shadPS4 reaches, played back on a PC VR headset via community-built compatibility shims rather than a dedicated PS VR emulator.</p>
+        </div>
+      </section>
+
+    </div>
+    <div class="wrap">
+      <div class="chapter-nav">
+        <a href="ps4.html"><span class="dir">&larr; previous</span><span class="label">06 · PlayStation 4</span></a>
+        <a class="next" href="ps5.html"><span class="dir">next &rarr;</span><span class="label">08 · PlayStation 5</span></a>
+      </div>
+    </div>
+    <footer>
+      <div class="wrap">
+        <p>Rakudo (楽土) is an independent, community-maintained reference. Not affiliated with, endorsed by, or sponsored by Sony Interactive Entertainment. PlayStation, PS1–PS5, DualShock, DualSense and related marks are trademarks of Sony Interactive Entertainment. Emulator names are trademarks of their respective projects, credited above.</p>
+        <p>Repository: <a href="https://github.com/aarvsn/rakudo">github.com/aarvsn/rakudo</a> · Licensed under MIT.</p>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script src="../assets/nav.js"></script>
+</body>
+</html>
